@@ -1,11 +1,8 @@
-package com.household.purchases.model;
-
-import lombok.RequiredArgsConstructor;
+package com.household.purchases.enums;
 
 import java.util.Objects;
 
-@RequiredArgsConstructor
-public enum Measure {
+public enum MeasureType {
     KILOGRAM("kg"),
     GRAM("gm"),
     LITER("l"),
@@ -20,8 +17,10 @@ public enum Measure {
         return measureName;
     }
 
-    public static Measure getByType(String type) {
-        for (Measure item : Measure.values()) {
+    MeasureType(String typeName) {this.measureName = typeName;}
+
+    public static MeasureType getByType(String type) {
+        for (MeasureType item : MeasureType.values()) {
             if (Objects.equals(item.getMeasureName(), type)) {
                 return item;
             }

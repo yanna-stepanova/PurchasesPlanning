@@ -7,11 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -20,22 +17,25 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @Entity
-@SQLDelete(sql = "UPDATE recipes SET is_deleted = TRUE WHERE id = ?")
+@SQLDelete(sql = "UPDATE dish_ingredients SET is_deleted = TRUE WHERE id = ?")
 @SQLRestriction("is_deleted = FALSE")
-@Table(name = "recipes")
-public class Recipe {
+@Table(name = "dish_ingredients")
+public class DishIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String title;
-    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "dish_id", nullable = false)
+    private Dish dish;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ingredient_id", nullable = false)
+    private Ingredient ingredient;
+
+    @Column(name = "quantity", nullable = false)
+    private double quantity;
+
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "recipes_products",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> productSet = new HashSet<>();
-
 }
