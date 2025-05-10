@@ -12,7 +12,7 @@ public class SwaggerConfiguration {
         return new OpenAPI()
                 .info(new Info()
                         .title("Household Purchases API")
-                        .description("API для управління продуктами, меню та покупками")
+                        .description("API для планування покупок продуктів")
                         .version("v1.0.0")
                 );
     }

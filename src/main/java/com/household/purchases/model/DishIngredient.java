@@ -11,14 +11,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
 @Entity
-@SQLDelete(sql = "UPDATE dish_ingredients SET is_deleted = TRUE WHERE id = ?")
-@SQLRestriction("is_deleted = FALSE")
 @Table(name = "dish_ingredients")
 public class DishIngredient {
     @Id
@@ -35,7 +31,4 @@ public class DishIngredient {
 
     @Column(name = "quantity", nullable = false)
     private double quantity;
-
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }

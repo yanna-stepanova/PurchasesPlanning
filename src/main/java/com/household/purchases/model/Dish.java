@@ -12,8 +12,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +19,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@SQLDelete(sql = "UPDATE dishes SET is_deleted = TRUE WHERE id = ?")
-@SQLRestriction("is_deleted = FALSE")
 @Table(name = "dishes")
 public class Dish {
     @Id
@@ -36,9 +32,6 @@ public class Dish {
     @Column(name = "weather_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private WeatherType weatherType = WeatherType.ANY;
-
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 
     @OneToMany(mappedBy = "dish")
     private List<DishIngredient> ingredients = new ArrayList<>();

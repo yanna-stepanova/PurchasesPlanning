@@ -34,5 +34,5 @@ public class Menu {
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<MenuItem> items = new ArrayList<>();
+    private List<MenuDish> items = new ArrayList<>();
 }

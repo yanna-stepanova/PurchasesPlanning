@@ -1,6 +1,7 @@
 package com.household.purchases.service;
 
 import com.household.purchases.dto.ingredient.IngredientDto;
+import com.household.purchases.dto.ingredient.IngredientRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,4 +16,15 @@ public interface IngredientService {
      * @return page of ingredients
      */
     Page<IngredientDto> getAll(Pageable pageable);
+
+    Page<IngredientDto> getAll(Pageable pageable, String nameFilter);
+
+    IngredientDto getById(Long id);
+
+    IngredientDto create(IngredientRequest request);
+
+    IngredientDto update(Long id, IngredientRequest request);
+
+    void delete(Long id);
+
 }
