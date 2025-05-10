@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE ingredients SET is_deleted = TRUE WHERE id = ?")
-@SQLRestriction("is_deleted = FALSE")
 @Entity
 @Table(name = "ingredients")
 public class Ingredient {
@@ -38,9 +34,6 @@ public class Ingredient {
 
     @Column(name = "price", nullable = true)
     private Double pricePerUnit;
-
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 
     @OneToMany(mappedBy = "ingredient")
     private List<DishIngredient> dishes = new ArrayList<>();
