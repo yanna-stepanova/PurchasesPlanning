@@ -10,6 +10,7 @@ import com.household.purchases.repository.IngredientRepository;
 import com.household.purchases.service.IngredientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 /**
  * Service implementation for managing ingredients.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
@@ -25,6 +27,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Page<IngredientDto> getAll(Pageable pageable) {
+        log.info("Retrieving all ingredients with pageable: {}", pageable);
         return repository.findAll(pageable)
                 .map(this::toDto);
     }
@@ -32,6 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public IngredientDto getById(Long id) {
         Ingredient ingredient = getEntityById(id);
+        log.info("Received ingredient: '{}'", ingredient.getName());
         return toDto(ingredient);
     }
 
@@ -39,19 +43,27 @@ public class IngredientServiceImpl implements IngredientService {
     @Transactional
     public IngredientDto create(CreateIngredientDto dto) {
         Ingredient ingredient = mapper.toModel(dto);
-        return toDto(repository.save(ingredient));
+        Ingredient saved = repository.save(ingredient);
+        log.info("Saved ingredient with id: {}", saved.getId());
+        return toDto(saved);
     }
 
     @Override
+    @Transactional
     public IngredientDto update(Long id, UpdateIngredientDto dto) {
         Ingredient ingredient = getEntityById(id);
-        return toDto(repository.save(mapper.updateFromDto(ingredient, dto)));
+        Ingredient updated = mapper.updateFromDto(ingredient, dto);
+        Ingredient saved = repository.save(updated);
+        log.info("Ingredient with id = {} successfully updated", id);
+        return toDto(saved);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Ingredient ingredient = getEntityById(id);
         repository.delete(ingredient);
+        log.info("Ingredient with id = {} successfully deleted", id);
     }
 
     private IngredientDto toDto(Ingredient ingredient) {

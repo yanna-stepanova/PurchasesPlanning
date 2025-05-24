@@ -8,6 +8,7 @@ import com.household.purchases.service.IngredientService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Implementation of Ingredient API.
  */
+@Slf4j
 @RestController
-@RequestMapping("/v1/ingredients")
+@RequestMapping("${api.base-path}/ingredients")
 @RequiredArgsConstructor
 @Validated
 public class IngredientController implements IngredientApi {
@@ -36,18 +38,24 @@ public class IngredientController implements IngredientApi {
     @Override
     @GetMapping
     public ResponseEntity<Page<IngredientDto>> getAll(@ParameterObject @PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(ingredientService.getAll(pageable));
+        log.info("GET request for all ingredients with pageable");
+        Page<IngredientDto> result = ingredientService.getAll(pageable);
+        log.info("Returning {} ingredients", result.getTotalElements());
+        return ResponseEntity.ok(result);
     }
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<IngredientDto> getById(@PathVariable @Positive Long id) {
-        return ResponseEntity.ok(ingredientService.getById(id));
+        log.info("GET request for ingredient by id: {}", id);
+        IngredientDto result = ingredientService.getById(id);
+        return ResponseEntity.ok(result);
     }
 
     @Override
     @PostMapping
     public ResponseEntity<IngredientDto> create(@RequestBody @Valid CreateIngredientDto dto) {
+        log.info("POST request to create ingredient: {}", dto);
         return ResponseEntity.ok(ingredientService.create(dto));
     }
 
@@ -55,12 +63,15 @@ public class IngredientController implements IngredientApi {
     @PutMapping("/{id}")
     public ResponseEntity<IngredientDto> update(@PathVariable @Positive Long id,
                                                 @RequestBody @Valid UpdateIngredientDto dto) {
-        return ResponseEntity.ok(ingredientService.update(id, dto));
+        log.info("PUT request to update ingredient with id {}: {}", id, dto);
+        IngredientDto result = ingredientService.update(id, dto);
+        return ResponseEntity.ok(result);
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
+        log.info("DELETE request for ingredient with id: {}", id);
         ingredientService.delete(id);
         return ResponseEntity.noContent().build();
     }
