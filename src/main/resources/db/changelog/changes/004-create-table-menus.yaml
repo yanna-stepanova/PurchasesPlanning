@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-menus-table
+      author: yana_stepanova
+      changes:
+        - createTable:
+            tableName: menus
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: start_date
+                  type: DATE
+                  constraints:
+                    nullable: true
+              - column:
+                  name: end_date
+                  type: DATE
+                  constraints:
+                    nullable: true

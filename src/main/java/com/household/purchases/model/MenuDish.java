@@ -19,8 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "menu_items")
-public class MenuItem {
+@Table(name = "menu_dishes")
+public class MenuDish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

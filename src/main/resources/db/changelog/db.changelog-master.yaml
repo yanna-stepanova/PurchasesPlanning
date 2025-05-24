@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/001-create-table-ingredients.yaml
+  - include:
+      file: db/changelog/changes/002-create-table-dishes.yaml
+  - include:
+      file: db/changelog/changes/003-create-table-dish_ingredients.yaml
+  - include:
+      file: db/changelog/changes/004-create-table-menus.yaml
+  - include:
+      file: db/changelog/changes/005-create-table-menu_dishes.yaml
