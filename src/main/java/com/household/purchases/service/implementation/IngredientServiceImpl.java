@@ -3,6 +3,7 @@ package com.household.purchases.service.implementation;
 import com.household.purchases.dto.ingredient.CreateIngredientDto;
 import com.household.purchases.dto.ingredient.IngredientDto;
 import com.household.purchases.dto.ingredient.UpdateIngredientDto;
+import com.household.purchases.exception.DuplicateResourceException;
 import com.household.purchases.exception.NotFoundException;
 import com.household.purchases.mapper.IngredientMapper;
 import com.household.purchases.model.Ingredient;
@@ -29,23 +30,27 @@ public class IngredientServiceImpl implements IngredientService {
     public Page<IngredientDto> getAll(Pageable pageable) {
         log.info("Retrieving all ingredients with pageable: {}", pageable);
         return repository.findAll(pageable)
-                .map(this::toDto);
+                .map(mapper::toDto);
     }
 
     @Override
     public IngredientDto getById(Long id) {
         Ingredient ingredient = getEntityById(id);
         log.info("Received ingredient: '{}'", ingredient.getName());
-        return toDto(ingredient);
+        return mapper.toDto(ingredient);
     }
 
     @Override
     @Transactional
     public IngredientDto create(CreateIngredientDto dto) {
+        if (repository.existsByNameIgnoreCase(dto.name())) {
+            throw new DuplicateResourceException("Ingredient", "name", dto.name());
+        }
+
         Ingredient ingredient = mapper.toModel(dto);
         Ingredient saved = repository.save(ingredient);
         log.info("Saved ingredient with id: {}", saved.getId());
-        return toDto(saved);
+        return mapper.toDto(saved);
     }
 
     @Override
@@ -55,7 +60,7 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient updated = mapper.updateFromDto(ingredient, dto);
         Ingredient saved = repository.save(updated);
         log.info("Ingredient with id = {} successfully updated", id);
-        return toDto(saved);
+        return mapper.toDto(saved);
     }
 
     @Override
@@ -64,10 +69,6 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = getEntityById(id);
         repository.delete(ingredient);
         log.info("Ingredient with id = {} successfully deleted", id);
-    }
-
-    private IngredientDto toDto(Ingredient ingredient) {
-        return mapper.toDto(ingredient);
     }
 
     private Ingredient getEntityById(Long id) {

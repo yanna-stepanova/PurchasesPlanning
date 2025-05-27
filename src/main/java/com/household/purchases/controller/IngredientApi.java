@@ -56,6 +56,7 @@ public interface IngredientApi {
     @Operation(summary = "Create a new ingredient")
     @ApiResponse(responseCode = "200", description = "Successfully created ingredient")
     @ApiResponse(responseCode = "400", description = "Invalid request body")
+    @ApiResponse(responseCode = "409", description = "Ingredient with the given name already exists")
     ResponseEntity<IngredientDto> create(@RequestBody @Valid CreateIngredientDto dto);
 
     /**

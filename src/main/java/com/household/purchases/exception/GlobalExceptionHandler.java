@@ -1,7 +1,7 @@
 package com.household.purchases.exception;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -19,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Global exception handler that provides centralized exception handling across all {@code @RestController} components.
@@ -42,36 +40,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handles {@link IllegalArgumentException} thrown on invalid business logic inputs.
+     * Handles custom {@link DuplicateResourceException} when a resource with the same unique field already exists.
+     * This can be triggered by trying to save a resource (e.g., Ingredient, Dish, Menu) with a non-unique name or identifier.
      *
-     * @param ex the thrown IllegalArgumentException
-     * @return HTTP 400 Bad Request response with error details
+     * @param ex the thrown DuplicateResourceException
+     * @return HTTP 409 Conflict response with error details
      */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        log.warn("Validation error: {}", ex.getMessage());
-        return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
-    /**
-     * Handles general unexpected exceptions.
-     *
-     * @param ex the thrown Exception
-     * @return HTTP 500 Internal Server Error response with generic message
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        log.error("Unexpected error: ", ex);
-        return generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        String rootMessage = Optional.ofNullable(ex.getRootCause())
-                .map(Throwable::getMessage)
-                .orElse(ex.getMessage());
-        log.warn("Data integrity violation: {}", rootMessage);
-        return generateErrorResponse(HttpStatus.CONFLICT, rootMessage);
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateResourceException(DuplicateResourceException ex) {
+        log.warn("Duplicate resource error: {}", ex.getMessage());
+        return generateErrorResponse(HttpStatus.CONFLICT, ex.getLocalizedMessage());
     }
 
     /**
@@ -112,7 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<ErrorResponse> generateErrorResponse(HttpStatus status, String errorText) {
         return ResponseEntity.status(status).body(
-                new ErrorResponse(status, errorText, List.of(), status.name()));
+                new ErrorResponse(status, errorText, status.name()));
     }
 
     /**
@@ -120,13 +98,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      *
      * @param status     HTTP status of the error
      * @param message    general message about the error
-     * @param errors     list of specific error details, such as field validation errors
      * @param errorCode  unique identifier for the error type
      */
     public record ErrorResponse(
             HttpStatus status,
             String message,
-            List<String> errors,
             String errorCode
     ) {}
 }
