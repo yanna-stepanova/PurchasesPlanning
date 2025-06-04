@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="3_0-create-measurement_type-enum" author="yana_stepanova">
+        <sql>
+            CREATE TYPE measurement_type AS ENUM ('G', 'KG', 'ML', 'L', 'PCS', 'TSP', 'TBSP');
+        </sql>
+    </changeSet>
+
+    <changeSet id="3-create-dish_ingredients-table" author="yana_stepanova">
+        <sql>
+            CREATE TABLE dish_ingredients (
+            id BIGSERIAL PRIMARY KEY,
+            dish_id BIGINT NOT NULL,
+            ingredient_id BIGINT NOT NULL,
+            quantity DOUBLE PRECISION NOT NULL,
+            unit measurement_type NOT NULL,
+            CONSTRAINT fk_dish_ingredients_dish FOREIGN KEY (dish_id)
+                REFERENCES dishes(id)
+                ON DELETE CASCADE
+                ON UPDATE RESTRICT,
+            CONSTRAINT fk_dish_ingredients_ingredient FOREIGN KEY (ingredient_id)
+                REFERENCES ingredients(id)
+                ON DELETE CASCADE
+                ON UPDATE RESTRICT);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

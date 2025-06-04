@@ -53,6 +53,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Handles {@link InvalidEnumCodeException} which is thrown when a provided string value
+     * does not match any of the expected values in an enumeration.
+     * <p>
+     * This typically occurs when an invalid unit of measurement or similar value is submitted
+     * in a request body.
+     *
+     * @param ex the thrown InvalidEnumCodeException
+     * @return HTTP 400 Bad Request response with details about the invalid enum value
+     */
+    @ExceptionHandler(InvalidEnumCodeException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEnumCodeException(InvalidEnumCodeException ex) {
+        log.warn("Invalid enum code: {}", ex.getMessage());
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage());
+    }
+
+    /**
      * Handles validation errors for invalid request bodies.
      *
      * @param ex the MethodArgumentNotValidException
