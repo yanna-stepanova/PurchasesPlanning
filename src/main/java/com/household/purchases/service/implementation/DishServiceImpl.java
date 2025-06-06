@@ -6,6 +6,7 @@ import com.household.purchases.dto.dish.DishShortDto;
 import com.household.purchases.dto.dish.UpdateDishDto;
 import com.household.purchases.dto.dishingredient.CreateDishIngredientDto;
 import com.household.purchases.dto.dishingredient.DishIngredientDto;
+import com.household.purchases.dto.dishingredient.DishIngredientShortDto;
 import com.household.purchases.dto.dishingredient.UpdateDishIngredientDto;
 import com.household.purchases.exception.DuplicateResourceException;
 import com.household.purchases.exception.NotFoundException;
@@ -41,20 +42,20 @@ public class DishServiceImpl implements DishService {
     private final IngredientService ingredientService;
 
     @Override
-    public Page<DishShortDto> getAll(Pageable pageable) {
+    public Page<DishShortDto> getAllDishes(Pageable pageable) {
         log.info("Retrieving all dishes with pageable: {}", pageable);
         return repository.findAll(pageable).map(mapper::toShortDto);
     }
 
     @Override
-    public DishDto getById(Long id) {
+    public DishDto getDishById(Long id) {
         Dish dish = getEntityById(id);
         log.info("Received dish: '{}'", dish.getName());
         return mapper.toDto(dish);
     }
 
     @Override
-    public DishDto create(CreateDishDto dto) {
+    public DishDto createDish(CreateDishDto dto) {
         if (repository.existsByNameIgnoreCase(dto.name())) {
             throw new DuplicateResourceException("Dish", "name", dto.name());
         }
@@ -69,7 +70,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public DishDto update(Long id, UpdateDishDto dto) {
+    public DishDto updateDish(Long id, UpdateDishDto dto) {
         Dish dish = getEntityById(id);
         mapper.patchFromDto(dish, dto);
 
@@ -91,7 +92,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteDish(Long id) {
         Dish dish = getEntityById(id);
         repository.delete(dish);
         log.info("Dish with id = {} successfully deleted", id);
@@ -114,6 +115,13 @@ public class DishServiceImpl implements DishService {
     public void deleteIngredient(Long dishId, Long dishIngredientId) {
         dishIngredientService.delete(dishId, dishIngredientId);
         log.info("DishIngredient with id = {} successfully deleted", dishIngredientId);
+    }
+
+    @Override
+    public List<DishIngredientShortDto> getAllIngredientsByDish(Long dishId) {
+        Dish dish = getEntityById(dishId);
+        log.info("Fetching all ingredients for dishId: {}", dish.getId());
+        return dishIngredientService.getAllByDish(dishId);
     }
 
     private Dish getEntityById(Long id) {

@@ -2,6 +2,7 @@ package com.household.purchases.service.implementation;
 
 import com.household.purchases.dto.dishingredient.CreateDishIngredientDto;
 import com.household.purchases.dto.dishingredient.DishIngredientDto;
+import com.household.purchases.dto.dishingredient.DishIngredientShortDto;
 import com.household.purchases.dto.dishingredient.UpdateDishIngredientDto;
 import com.household.purchases.exception.NotFoundException;
 import com.household.purchases.mapper.DishIngredientMapper;
@@ -13,6 +14,8 @@ import com.household.purchases.service.DishIngredientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +55,14 @@ public class DishIngredientServiceImpl implements DishIngredientService {
     public void delete(Long dishId, Long dishIngredientId) {
         DishIngredient dishIngredient = repository.findByIdAndDishId(dishIngredientId, dishId)
                 .orElseThrow(() -> new NotFoundException("DishIngredient", "id", dishIngredientId, "dishId", dishId));
-        repository.delete(dishIngredient); //TODO check is it deleted from list of ingredients in dish
+        repository.delete(dishIngredient);
+    }
+
+    @Override
+    public List<DishIngredientShortDto> getAllByDish(Long dishId) {
+        List<DishIngredient> ingredientList= repository.findAllByDishId(dishId);
+        return ingredientList.stream()
+                .map(mapper::toShortDto)
+                .toList();
     }
 }

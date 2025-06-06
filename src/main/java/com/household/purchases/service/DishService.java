@@ -6,11 +6,12 @@ import com.household.purchases.dto.dish.DishShortDto;
 import com.household.purchases.dto.dish.UpdateDishDto;
 import com.household.purchases.dto.dishingredient.CreateDishIngredientDto;
 import com.household.purchases.dto.dishingredient.DishIngredientDto;
+import com.household.purchases.dto.dishingredient.DishIngredientShortDto;
 import com.household.purchases.dto.dishingredient.UpdateDishIngredientDto;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * Service interface for managing dishes.
@@ -22,7 +23,7 @@ public interface DishService {
      * @param pageable pagination parameters
      * @return a page of dishes
      */
-    Page<DishShortDto> getAll(Pageable pageable);
+    Page<DishShortDto> getAllDishes(Pageable pageable);
 
     /**
      * Get dish by ID.
@@ -30,7 +31,7 @@ public interface DishService {
      * @param id dish ID
      * @return dish details
      */
-    DishDto getById(Long id);
+    DishDto getDishById(Long id);
 
     /**
      * Create a new dish.
@@ -38,7 +39,7 @@ public interface DishService {
      * @param dto dish data
      * @return created dish
      */
-    DishDto create(CreateDishDto dto);
+    DishDto createDish(CreateDishDto dto);
 
     /**
      * Update dish by ID.
@@ -47,23 +48,49 @@ public interface DishService {
      * @param dto updated dish data
      * @return updated dish
      */
-    DishDto update(Long id, UpdateDishDto dto);
+    DishDto updateDish(Long id, UpdateDishDto dto);
 
     /**
      * Delete dish by ID.
      *
      * @param id dish ID
      */
-    void delete(Long id);
+    void deleteDish(Long id);
 
-    DishIngredientDto updateIngredient(@Positive Long dishId,
-                                       @Positive Long ingredientId,
-                                       @Valid UpdateDishIngredientDto dto);
+    /**
+     * Update an ingredient of a specific dish.
+     *
+     * @param dishId ID of the dish
+     * @param ingredientId ID of the ingredient in the dish
+     * @param dto updated ingredient data
+     * @return updated ingredient
+     */
+    DishIngredientDto updateIngredient(Long dishId,
+                                       Long ingredientId,
+                                       UpdateDishIngredientDto dto);
 
-    DishIngredientDto createIngredient(@Positive Long dishId, @Valid CreateDishIngredientDto dto);
+    /**
+     * Create a new ingredient.
+     *
+     * @param dishId dishId
+     * @param dto dto
+     * @return {@link DishIngredientDto}
+     * @see DishIngredientDto
+     */
+    DishIngredientDto createIngredient(Long dishId, CreateDishIngredientDto dto);
 
     /**
      * Delete dishIngredient by ID.
      */
-    void deleteIngredient(@Positive Long dishId, @Positive Long dishIngredientId);
+    void deleteIngredient(Long dishId, Long dishIngredientId);
+
+    /**
+     * Get all ingredients by dish
+     *
+     * @param dishId dishId
+     * @return {@link List}
+     * @see List
+     * @see DishIngredientShortDto
+     */
+    List<DishIngredientShortDto> getAllIngredientsByDish(Long dishId);
 }
