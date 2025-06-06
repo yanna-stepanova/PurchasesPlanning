@@ -35,7 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientDto getById(Long id) {
-        Ingredient ingredient = getEntityById(id);
+        Ingredient ingredient = this.getEntityById(id);
         log.info("Received ingredient: '{}'", ingredient.getName());
         return mapper.toDto(ingredient);
     }
@@ -56,7 +56,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     @Transactional
     public IngredientDto update(Long id, UpdateIngredientDto dto) {
-        Ingredient ingredient = getEntityById(id);
+        Ingredient ingredient = this.getEntityById(id);
         Ingredient updated = mapper.updateFromDto(ingredient, dto);
         Ingredient saved = repository.save(updated);
         log.info("Ingredient with id = {} successfully updated", id);
@@ -66,12 +66,13 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Ingredient ingredient = getEntityById(id);
+        Ingredient ingredient = this.getEntityById(id);
         repository.delete(ingredient);
         log.info("Ingredient with id = {} successfully deleted", id);
     }
 
-    private Ingredient getEntityById(Long id) {
+    @Override
+    public Ingredient getEntityById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Ingredient", id));
     }
