@@ -1,7 +1,10 @@
 package com.household.purchases.model;
 
+import com.household.purchases.enums.MeasurementType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,5 +33,9 @@ public class DishIngredient {
     private Ingredient ingredient;
 
     @Column(name = "quantity", nullable = false)
-    private double quantity;
+    private Double quantity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name= "unit", nullable = false)
+    private MeasurementType unit;
 }

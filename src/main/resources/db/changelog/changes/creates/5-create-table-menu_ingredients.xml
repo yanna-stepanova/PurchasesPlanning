@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="5-create-menu-dishes-table" author="yana_stepanova">
+        <sql>
+            CREATE TABLE menu_dishes (
+            id BIGSERIAL PRIMARY KEY,
+            menu_id BIGINT NOT NULL,
+            dish_id BIGINT NOT NULL,
+            day VARCHAR(20),
+            meal_type VARCHAR(20),
+            CONSTRAINT fk_menu_dishes_menu FOREIGN KEY (menu_id)
+                REFERENCES menus(id)
+                ON DELETE CASCADE
+                ON UPDATE RESTRICT,
+            CONSTRAINT fk_menu_dishes_dish FOREIGN KEY (dish_id)
+                REFERENCES dishes(id)
+                ON DELETE CASCADE
+                ON UPDATE RESTRICT);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -3,6 +3,9 @@ package com.household.purchases.service;
 import com.household.purchases.dto.ingredient.IngredientDto;
 import com.household.purchases.dto.ingredient.CreateIngredientDto;
 import com.household.purchases.dto.ingredient.UpdateIngredientDto;
+import com.household.purchases.model.Ingredient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -49,4 +52,13 @@ public interface IngredientService {
      * @param id ingredient ID
      */
     void delete(Long id);
+
+    /**
+     * get entity by id
+     *
+     * @param id id
+     * @return {@link Ingredient}
+     * @see Ingredient
+     */
+    Ingredient getEntityById(@Positive @NotBlank Long id);
 }
