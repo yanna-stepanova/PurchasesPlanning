@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="1_1-insert-ingredients" author="yana_stepanova">
+        <sql>
+            INSERT INTO ingredients (name, unit, price)
+            VALUES
+            ('Борошно', '1 кг', 65.0),
+            ('Кефір 2.5%', '0.5 кг', 30.50),
+            ('Яйцє біле', '10 шт', 65.0),
+            ('Цукор', '1 кг', 38.0),
+            ('Олія', '0.7 мл', 78.0),
+            ('Філе куряче', '1 кг', 220.0),
+            ('Молоко 2.5% Радимо', '800 мл', 35.0);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -9,3 +9,9 @@ databaseChangeLog:
       file: db/changelog/changes/creates/4-create-table-menus.xml
   - include:
       file: db/changelog/changes/creates/5-create-table-menu_ingredients.xml
+
+# ------ INSERTS --------------------------------------------------------------
+  - include:
+      file: db/changelog/changes/inserts/1_1-insert-ingredients.xml
+  - include:
+      file: db/changelog/changes/inserts/2_1-insert-into-dishes-and-dish_ingredients.xml

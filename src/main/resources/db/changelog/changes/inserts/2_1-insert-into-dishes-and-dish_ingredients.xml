@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="2_1_1-insert-dish" author="yana_stepanova">
+        <sql>
+            INSERT INTO dishes (name, description, weather_type)
+            VALUES (
+            'Заливний пиріг з м''ясом',
+            'У кефір додати соду, яйця, цукор, сіль, борошно, олію. Тісто має бути як на оладки - не занадто густе й не занадто рідке. Вилити у форму, викласти порізане філе. Випікати 40 хв при темп-рі 150. У тісто можна додати натертий сир.',
+            'COLD'
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="2_1_2-insert-into-dish_ingredients" author="yana_stepanova">
+        <sql>
+            INSERT INTO dish_ingredients (dish_id, ingredient_id, quantity, unit)
+            VALUES
+            ((SELECT id FROM dishes WHERE name = 'Заливний пиріг з м''ясом'), 1, 1, 'KG'),
+            ((SELECT id FROM dishes WHERE name = 'Заливний пиріг з м''ясом'), 2, 2, 'PCS'),
+            ((SELECT id FROM dishes WHERE name = 'Заливний пиріг з м''ясом'), 3, 6, 'PCS'),
+            ((SELECT id FROM dishes WHERE name = 'Заливний пиріг з м''ясом'), 4, 4, 'TBSP'),
+            ((SELECT id FROM dishes WHERE name = 'Заливний пиріг з м''ясом'), 5, 3, 'TBSP'),
+            ((SELECT id FROM dishes WHERE name = 'Заливний пиріг з м''ясом'), 6, 1, 'KG');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
